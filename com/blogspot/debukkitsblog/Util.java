@@ -11,8 +11,8 @@ import java.util.HashMap;
 
 public class FileStorage {
 	
-	File storageFile;
-	protected HashMap<String, Object> storageMap;
+	private File storageFile;
+	private HashMap<String, Object> storageMap;
 	
 	/**
 	 * Creates a FileStorage. It allows you to store<br>
