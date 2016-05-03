@@ -8,7 +8,11 @@ A very, very, very light-weight utility for Java applications allowing you to st
 
 * **get(String)** Returns your object from the storage
 
-* **getAll()** Returns all stored objects in an ArrayList of Objects
+* **getAll()** Returns all stored objects in a HashMap of Strings and Objects
+
+* **getAllAsArrayList** Returns all stored objects in an ArrayList of Objects
+ 
+* **printAll** Prints all stored keys with corresponding objects
 
 * **remove(String)** Removes an Key-Object pair from the storage
 
