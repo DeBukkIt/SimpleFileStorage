@@ -88,12 +88,29 @@ public class FileStorage {
 	 * All stored objects in an ArrayList of Objects
 	 * @return all stored objects in an ArrayList of Objects
 	 */
-	public ArrayList<Object> getAll(){
+	public ArrayList<Object> getAllAsArrayList(){
 		ArrayList<Object> result = new ArrayList<Object>();
 		for(Object c: storageMap.values()){
 			result.add(c);
 		}
 		return result;
+	}
+	
+	/**
+	 * All stored objects in a HashMap of Strings and Objects
+	 * @return all stored objects in a HashMap of Strings and Objects
+	 */
+	public HashMap<String, Object> getAll(){
+		return storageMap;
+	}
+	
+	/**
+	 * Prints all stored keys with corresponding objects
+	 */
+	public void printAll(){
+		for(String cKey : storageMap.keySet()){
+			System.out.println(cKey + " :: " + storageMap.get(cKey));
+		}
 	}
 	
 	/**
