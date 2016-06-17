@@ -86,14 +86,14 @@ public class FileStorage {
   }
   
   /**
-   * Gives you the key for a stored object
+   * Gives you the first key for a stored object
    * @param obj The object you want to get the key for
-   * @return the key of your object or null if nothing was found for <i>obj</i>
+   * @return the first key for your object or null if nothing was found for <i>obj</i>
    */
-  public String getKey(Object obj){
+  public String getFirstKey(Object obj){
     for (Entry<String, Object> entry : storageMap.entrySet()) {
-        if (obj.equals(entry.getValue()))
-          return entry.getKey();
+      if (obj.equals(entry.getValue()))
+        return entry.getKey();
       }
     return null;
   }
