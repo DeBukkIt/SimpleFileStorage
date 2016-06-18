@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 public class FileStorage {
   
@@ -85,6 +86,19 @@ public class FileStorage {
   }
   
   /**
+   * Gives you the first key for a stored object
+   * @param obj The object you want to get the key for
+   * @return the first key for your object or null if nothing was found for <i>obj</i>
+   */
+  public String getFirstKey(Object obj){
+    for (Entry<String, Object> entry : storageMap.entrySet()) {
+      if (obj.equals(entry.getValue()))
+        return entry.getKey();
+      }
+    return null;
+  }
+  
+  /**
    * All stored objects in an ArrayList of Objects
    * @return all stored objects in an ArrayList of Objects
    */
@@ -119,6 +133,18 @@ public class FileStorage {
    */
   public void remove(String key){
     storageMap.remove(key);
+    save();
+  }
+  
+  /**
+   * Removes an Key-Object pair from the storage
+   * @param obj
+   */
+  public void remove(Object obj){
+    for (Entry<String, Object> entry : storageMap.entrySet()) {
+      if (obj.equals(entry.getValue()))
+        remove(entry.getKey());
+    }
     save();
   }
   

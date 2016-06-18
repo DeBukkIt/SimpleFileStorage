@@ -8,6 +8,8 @@ A very, very, very light-weight utility for Java applications allowing you to st
 
 * **get(String)** Returns your object from the storage
 
+* **getFirstKey(Object)** Returns the first key corresponding to the object
+
 * **getAll()** Returns all stored objects in a HashMap of Strings and Objects
 
 * **getAllAsArrayList()** Returns all stored objects in an ArrayList of Objects
@@ -16,6 +18,8 @@ A very, very, very light-weight utility for Java applications allowing you to st
 
 * **remove(String)** Removes an Key-Object pair from the storage
 
-* **hasKey(String)** Checks whether a key is registerd
+* **remove(Object)** Removes an Key-Object pair from the storage
+
+* **hasKey(String)** Checks whether a key is registered
 
 * **hasObject(Object)** Checks whether an object is stored at all
