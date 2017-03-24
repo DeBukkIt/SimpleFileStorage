@@ -23,3 +23,5 @@ A very, very, very light-weight utility for Java applications allowing you to st
 * **hasKey(String)** Checks whether a key is registered
 
 * **hasObject(Object)** Checks whether an object is stored at all
+
+* **getSize()** Returns the number of objects stored
