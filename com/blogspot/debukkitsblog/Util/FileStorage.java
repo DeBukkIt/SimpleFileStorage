@@ -167,6 +167,14 @@ public class FileStorage {
   }
   
   /**
+   * Returns the number of objects (elements) stored
+   * @return The number of objects (elements) stored
+   */  
+  public int getSize(){
+    return storageMap.size();
+  }
+  
+  /**
    * Return a String representation of the HashMap<br>
    * containing all the key-object pairs.
    */
