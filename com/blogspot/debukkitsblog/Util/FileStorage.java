@@ -167,8 +167,8 @@ public class FileStorage {
   }
   
   /**
-   * Returns the number of objects (elements) stored
-   * @return The number of objects (elements) stored
+   * Returns the number of objects stored
+   * @return The number of objects stored
    */  
   public int getSize(){
     return storageMap.size();
