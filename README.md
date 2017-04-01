@@ -8,6 +8,10 @@ A very, very, very light-weight utility for Java applications allowing you to st
 
 * **get(String)** Returns your object from the storage
 
+* **store(String, Object, String)** Stores an Object o using a String key for later identification. The object is AES encrypted first using the password you choose.
+
+* **get(String, String)** Returns your encrypted object from the storage (using your password to decrypt it first).
+
 * **getFirstKey(Object)** Returns the first key corresponding to the object
 
 * **getAll()** Returns all stored objects in a HashMap of Strings and Objects
