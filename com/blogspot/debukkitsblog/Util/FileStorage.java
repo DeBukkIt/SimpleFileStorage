@@ -146,7 +146,11 @@ public class FileStorage {
 	 */
 	public void printAll(){
 		for(String cKey : storageMap.keySet()){
-			System.out.println(cKey + " :: " + storageMap.get(cKey));
+			if(storageMap.get(cKey) instanceof CryptedObject) {
+				System.out.println(cKey + " :: (Encrypted)");
+			} else {
+				System.out.println(cKey + " :: " + storageMap.get(cKey));
+			}
 		}
 	}
 	
