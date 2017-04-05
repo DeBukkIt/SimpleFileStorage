@@ -111,8 +111,9 @@ public class FileStorage {
 	 * @param key The key the object is available under
 	 * @param password The password to use for decryption
 	 * @return your object or null if nothing was found for <i>key</i> or if decryption failed (wrong password)
+	 * @throws DecryptionFailedException 
 	 */
-	public Object get(String key, String password){
+	public Object get(String key, String password) throws DecryptionFailedException {
 		if(storageMap.get(key) instanceof CryptedObject) {
 			return Crypter.decrypt((CryptedObject) get(key), password);
 		} else {
