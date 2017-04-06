@@ -9,8 +9,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.blogspot.debukkitsblog.Crypt.CryptedObject;
-import com.blogspot.debukkitsblog.Crypt.Crypter;
+import com.blogspot.debukkitsblog.Crypt.*;
 
 public class FileStorage {
 	
@@ -111,7 +110,7 @@ public class FileStorage {
 	 * @param key The key the object is available under
 	 * @param password The password to use for decryption
 	 * @return your object or null if nothing was found for <i>key</i> or if decryption failed (wrong password)
-	 * @throws DecryptionFailedException 
+	 * @throws DecryptionFailedException
 	 */
 	public Object get(String key, String password) throws DecryptionFailedException {
 		if(storageMap.get(key) instanceof CryptedObject) {
@@ -123,16 +122,33 @@ public class FileStorage {
 	
 	/**
 	 * All stored objects in an ArrayList of Objects
-	 * @return all stored objects in an ArrayList of Objects
+	 * @return all stored objects in an ArrayList of Object
 	 */
 	public ArrayList<Object> getAllAsArrayList(){
-		ArrayList<Object> result = new ArrayList<Object>();
+		ArrayList<Object> result = new ArrayList<>();
 		for(Object c: storageMap.values()){
 			result.add(c);
 		}
 		return result;
 	}
-	
+
+	/**
+	 * All stored objects in an ArrayList of Objects (decrypts encrypted objects with given password)
+	 * @return all stored objects in an ArrayList of Objects
+	 * @throws DecryptionFailedException
+	 */
+	public ArrayList<Object> getAllAsArrayList(String password) throws DecryptionFailedException {
+		ArrayList<Object> result = new ArrayList<>();
+		for(Object c: storageMap.values()){
+			if (c instanceof CryptedObject) {
+				result.add(Crypter.decrypt((CryptedObject) c, password));
+			} else {
+				result.add(c);
+			}
+		}
+		return result;
+	}
+
 	/**
 	 * All stored objects in a HashMap of Strings and Objects
 	 * @return all stored objects in a HashMap of Strings and Objects
@@ -148,6 +164,23 @@ public class FileStorage {
 		for(String cKey : storageMap.keySet()){
 			if(storageMap.get(cKey) instanceof CryptedObject) {
 				System.out.println(cKey + " :: (Encrypted)");
+			} else {
+				System.out.println(cKey + " :: " + storageMap.get(cKey));
+			}
+		}
+	}
+
+	/**
+	 * Prints all stored keys with corresponding objects (decrypts encrypted objects with given password)
+	 */
+	public void printAll(String password){
+		for(String cKey : storageMap.keySet()){
+			if(storageMap.get(cKey) instanceof CryptedObject) {
+				try {
+					System.out.println(cKey + " :: " + Crypter.decrypt((CryptedObject) get(cKey), password));
+				} catch (DecryptionFailedException e) {
+					System.out.println(cKey + " :: (" + e.getMessage() + ")");
+				}
 			} else {
 				System.out.println(cKey + " :: " + storageMap.get(cKey));
 			}
