@@ -150,6 +150,24 @@ public class FileStorage {
 	}
 
 	/**
+	 * All stored objects in an ArrayList of Objects (decrypts encrypted objects with given password)
+	 * @return all stored objects in an ArrayList of Objects
+	 * @throws DecryptionFailedException
+	 */
+	public ArrayList<Object> getAllAsArrayList(HashMap<String, String> password) throws DecryptionFailedException {
+		ArrayList<Object> result = new ArrayList<>();
+		for(String key: storageMap.keySet()){
+			Object o = storageMap.get(key);
+			if (o instanceof CryptedObject) {
+				result.add(Crypter.decrypt((CryptedObject) o, password.get(key)));
+			} else {
+				result.add(o);
+			}
+		}
+		return result;
+	}
+
+	/**
 	 * All stored objects in a HashMap of Strings and Objects
 	 * @return all stored objects in a HashMap of Strings and Objects
 	 */
@@ -178,6 +196,23 @@ public class FileStorage {
 			if(storageMap.get(cKey) instanceof CryptedObject) {
 				try {
 					System.out.println(cKey + " :: " + Crypter.decrypt((CryptedObject) get(cKey), password));
+				} catch (DecryptionFailedException e) {
+					System.out.println(cKey + " :: (" + e.getMessage() + ")");
+				}
+			} else {
+				System.out.println(cKey + " :: " + storageMap.get(cKey));
+			}
+		}
+	}
+
+	/**
+	 * Prints all stored keys with corresponding objects (decrypts encrypted objects with given password)
+	 */
+	public void printAll(HashMap<String, String> password){
+		for(String cKey : storageMap.keySet()){
+			if(storageMap.get(cKey) instanceof CryptedObject) {
+				try {
+					System.out.println(cKey + " :: " + Crypter.decrypt((CryptedObject) get(cKey), password.get(cKey)));
 				} catch (DecryptionFailedException e) {
 					System.out.println(cKey + " :: (" + e.getMessage() + ")");
 				}
