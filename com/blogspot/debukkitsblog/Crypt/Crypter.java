@@ -1,4 +1,4 @@
-package com.blogspot.debukkitsblog.Crypt;
+package com.blogspot.debukkitsblog.crypt;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -99,14 +99,15 @@ public class Crypter {
 	 * @throws Exception
 	 */
 	private static Key generateKey(String key) throws Exception {
+		String resultKey = key;
 		while (key.length() < 16) {
-			key += key;
+			resultKey += resultKey;
 		}
-		while (key.length() > 16) {
-			key = key.substring(0, key.length() - 1);
+		while (resultKey.length() > 16) {
+			resultKey = resultKey.substring(0, resultKey.length() - 1);
 		}
 
-		byte[] keyValue = key.getBytes(Charset.forName("UTF-8"));
+		byte[] keyValue = resultKey.getBytes(Charset.forName("UTF-8"));
 		return new SecretKeySpec(keyValue, ALGO);
 	}
 	

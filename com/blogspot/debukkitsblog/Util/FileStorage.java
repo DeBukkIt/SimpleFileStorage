@@ -1,4 +1,4 @@
-package com.blogspot.debukkitsblog.Util;
+package com.blogspot.debukkitsblog.util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,8 +9,9 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.blogspot.debukkitsblog.Crypt.CryptedObject;
-import com.blogspot.debukkitsblog.Crypt.Crypter;
+import com.blogspot.debukkitsblog.crypt.CryptedObject;
+import com.blogspot.debukkitsblog.crypt.Crypter;
+import com.blogspot.debukkitsblog.crypt.Crypter.DecryptionFailedException;
 
 public class FileStorage {
 	
@@ -145,13 +146,7 @@ public class FileStorage {
 	 * Prints all stored keys with corresponding objects
 	 */
 	public void printAll(){
-		for(String cKey : storageMap.keySet()){
-			if(storageMap.get(cKey) instanceof CryptedObject) {
-				System.out.println(cKey + " :: (Encrypted)");
-			} else {
-				System.out.println(cKey + " :: " + storageMap.get(cKey));
-			}
-		}
+		System.out.println(this);
 	}
 	
 	/**
@@ -197,11 +192,15 @@ public class FileStorage {
 	 */
 	@Override
 	public String toString() {
-		String s = "";
+		String result = "FileStorage @ " + storageFile.getAbsolutePath() + "\n";
 		for(String cKey : storageMap.keySet()){
-			s += cKey + " :: " + storageMap.get(cKey) + "\n";
+			if(storageMap.get(cKey) instanceof CryptedObject) {
+				result += cKey + " :: (Encrypted)\n";
+			} else {
+				result += cKey + " :: " + storageMap.get(cKey) + "\n";
+			}
 		}
-		return s.trim();
+		return result.trim();
 	}
 
 }
