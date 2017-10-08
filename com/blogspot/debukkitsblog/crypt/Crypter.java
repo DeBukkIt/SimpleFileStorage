@@ -14,17 +14,20 @@ import javax.crypto.spec.SecretKeySpec;
 
 /**
  * Provides methods to encrypt and decrypt Objects
- * @author DeBukkIt
- *
+ * 
+ * @author Leonard Bienbeck
  */
 public class Crypter {
-	
+
 	private static final String ALGO = "AES";
 
 	/**
-	 * Encrypts an Object o and returns it's encrypted equivalent CryptedObject
-	 * @param o The object to encrypt
-	 * @param password The password to use for encryption
+	 * Encrypts an Object and returns its encrypted equivalent CryptedObject
+	 * 
+	 * @param o
+	 *            The object to encrypt
+	 * @param password
+	 *            The password to use for encryption
 	 * @return The CryptedObject equivalent of the given object
 	 */
 	public static CryptedObject encrypt(Object o, String password) {
@@ -40,11 +43,16 @@ public class Crypter {
 	}
 
 	/**
-	 * Decrypts a CryptedObject using a password and returns it's decrypted equivalent Object
-	 * @param co The CryptedObject to decrypt
-	 * @param password The password to use for decryption
+	 * Decrypts a CryptedObject using a password and returns its decrypted
+	 * equivalent Object
+	 * 
+	 * @param co
+	 *            The CryptedObject to decrypt
+	 * @param password
+	 *            The password to use for decryption
 	 * @return The decrypted object
-	 * @throws DecryptionFailedException If decryption fails. A wrong password will cause this.
+	 * @throws DecryptionFailedException
+	 *             If decryption fails. A wrong password will cause this.
 	 */
 	public static Object decrypt(CryptedObject co, String password) throws DecryptionFailedException {
 		try {
@@ -58,10 +66,14 @@ public class Crypter {
 
 	/**
 	 * Encrypts an array of bytes using the AES algorithm
-	 * @param data The array of bytes to encrypt
-	 * @param rawKey The password to use for encryption.
-	 * Warning: This password will be extended or shortened to match a length of 16 bytes (128 bit).
-	 * Therefore be careful! Different passwords, starting with the same sixteen characters, result in the same AES key.
+	 * 
+	 * @param data
+	 *            The array of bytes to encrypt
+	 * @param rawKey
+	 *            The password to use for encryption. Warning: This password will be
+	 *            extended or shortened to match a length of 16 bytes (128 bit).
+	 *            Therefore be careful! Different passwords, starting with the same
+	 *            sixteen characters, result in the same AES key.
 	 * @return An array of bytes containing the encrypted data
 	 * @throws Exception
 	 */
@@ -75,10 +87,14 @@ public class Crypter {
 
 	/**
 	 * Decrypts an array of bytes using the AES algorithm
-	 * @param encryptedData The array of bytes to decrtypt
-	 * @param rawKey The password to use for decryption.
-	 * Warning: This password will be extended or shortened to match a length of 16 bytes (128 bit).
-	 * Therefore be careful! Different passwords, starting with the same sixteen characters, result in the same AES key.
+	 * 
+	 * @param encryptedData
+	 *            The array of bytes to decrtypt
+	 * @param rawKey
+	 *            The password to use for decryption. Warning: This password will be
+	 *            extended or shortened to match a length of 16 bytes (128 bit).
+	 *            Therefore be careful! Different passwords, starting with the same
+	 *            sixteen characters, result in the same AES key.
 	 * @return An array of bytes containing the decrypted data
 	 * @throws Exception
 	 */
@@ -92,10 +108,12 @@ public class Crypter {
 
 	/**
 	 * Generates a key to use with the AES algorithm using a String <i>key</i>.<br>
-	 * Warning: This <i>key</i> will be extended or shortened to match a length of 16 bytes (128 bit).
-	 * Therefore be careful! Different passwords, starting with the same sixteen characters, result in the same AES key.
-	 * @param key
-	 * @return
+	 * Warning: This <i>key</i> will be extended or shortened to match a length of
+	 * 16 bytes (128 bit). Therefore be careful! Different passwords, starting with
+	 * the same sixteen characters, result in the same AES key.
+	 * 
+	 * @param key A String of 128 bit (16 characters)
+	 * @return An AES compatible Key object used by the encrypter to encrypt the data
 	 * @throws Exception
 	 */
 	private static Key generateKey(String key) throws Exception {
@@ -110,16 +128,17 @@ public class Crypter {
 		byte[] keyValue = resultKey.getBytes(Charset.forName("UTF-8"));
 		return new SecretKeySpec(keyValue, ALGO);
 	}
-	
+
 	/**
 	 * The exception thrown when a decryption fails.<br>
 	 * This might happen if the password is wrong.
 	 */
-	public static class DecryptionFailedException extends Exception {		
+	public static class DecryptionFailedException extends Exception {
+
 		/**
 		 * 
 		 */
-		private static final long serialVersionUID = 4687669054682421679L;
+		private static final long serialVersionUID = 5911192741823907010L;
 
 		@Override
 		public String getMessage() {
