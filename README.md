@@ -17,6 +17,10 @@ A very, very, very light-weight utility for Java applications allowing you to st
 * **getAll()** Returns all stored objects in a HashMap of Strings and Objects
 
 * **getAllAsArrayList()** Returns all stored objects in an ArrayList of Objects
+
+* **save()** Saves the stored objects to the File
+
+* **close()** Closes the FileStream by saving the stored objects to the File
  
 * **printAll()** Prints all stored keys with corresponding objects
 
