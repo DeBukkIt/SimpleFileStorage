@@ -112,7 +112,7 @@ public class FileStorage {
 	 * @param key The key the object is available under
 	 * @param password The password to use for decryption
 	 * @return your object or null if nothing was found for <i>key</i> or if decryption failed (wrong password)
-	 * @throws DecryptionFailedException 
+	 * @throws DecryptionFailedException This usually happens if the password is wrong
 	 */
 	public Object get(String key, String password) throws DecryptionFailedException {
 		if(storageMap.get(key) instanceof CryptedObject) {
@@ -151,7 +151,7 @@ public class FileStorage {
 	
 	/**
 	 * Removes an Key-Object pair from the storage
-	 * @param key
+	 * @param key The key of the object
 	 */
 	public void remove(String key){
 		storageMap.remove(key);
