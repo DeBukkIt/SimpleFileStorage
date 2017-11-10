@@ -25,4 +25,8 @@ hs_err_pid*
 # Eclipse IDE
 .project
 .classpath
+.settings
 *.jardesc
+
+# Maven Binaries
+/target/
