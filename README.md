@@ -4,11 +4,15 @@ A very, very, very light-weight utility for Java applications allowing you to st
 **Make a new instance of this class, tell it where to store your data and store them!**
 * **public FileStorage(File)** Creates a FileStorage.
 
+* **public FileStorage(File, boolean)** Creates a FileStorage with the option to turn autosave off.
+
+* **save()** Manually saves the FileStorage to disk. This happens automatically if autosave is turned off (cf. constructor).
+
 * **store(String, Object)** Stores an Object o using a String key for later identification
 
-* **get(String)** Returns your object from the storage
-
 * **store(String, Object, String)** Stores an Object o using a String key for later identification. The object is AES encrypted first using the password you choose.
+
+* **get(String)** Returns your object from the storage
 
 * **get(String, String)** Returns your encrypted object from the storage (using your password to decrypt it first).
 
