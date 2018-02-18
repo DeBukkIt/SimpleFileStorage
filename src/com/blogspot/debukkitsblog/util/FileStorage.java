@@ -74,15 +74,11 @@ public class FileStorage {
 	/**
 	 * Stores the FileStorage in the file on disk
 	 */
-	public void save() {
-		try {
-			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storageFile));
-			oos.writeObject(storageMap);
-			oos.flush();
-			oos.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public void save() throws IOException {
+		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storageFile));
+		oos.writeObject(storageMap);
+		oos.flush();
+		oos.close();
 	}
 
 	/**
