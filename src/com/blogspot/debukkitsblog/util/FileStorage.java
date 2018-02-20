@@ -74,15 +74,11 @@ public class FileStorage {
 	/**
 	 * Stores the FileStorage in the file on disk
 	 */
-	public void save() {
-		try {
-			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storageFile));
-			oos.writeObject(storageMap);
-			oos.flush();
-			oos.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public void save() throws IOException {
+		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storageFile));
+		oos.writeObject(storageMap);
+		oos.flush();
+		oos.close();
 	}
 
 	/**
@@ -110,7 +106,7 @@ public class FileStorage {
 	 * @param o
 	 *            The Object.
 	 */
-	public void store(String key, Object o) {
+	public void store(String key, Object o) throws IOException {
 		storageMap.put(key, o);
 		if (autosave)
 			save();
@@ -129,7 +125,7 @@ public class FileStorage {
 	 * @param password
 	 *            The password.
 	 */
-	public void store(String key, Object o, String password) {
+	public void store(String key, Object o, String password) throws IOException {
 		store(key, Crypter.encrypt(o, password));
 	}
 
@@ -203,7 +199,7 @@ public class FileStorage {
 	 * @param key
 	 *            The key of the object
 	 */
-	public void remove(String key) {
+	public void remove(String key) throws IOException {
 		storageMap.remove(key);
 		if (autosave)
 			save();
