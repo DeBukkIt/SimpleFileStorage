@@ -1,5 +1,7 @@
 package com.blogspot.debukkitsblog.util;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -75,7 +77,7 @@ public class FileStorage {
 	 * Stores the FileStorage in the file on disk
 	 */
 	public void save() throws IOException {
-		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storageFile));
+		ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(storageFile)));
 		oos.writeObject(storageMap);
 		oos.flush();
 		oos.close();
@@ -87,7 +89,7 @@ public class FileStorage {
 	@SuppressWarnings("unchecked")
 	private void load() {
 		try {
-			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(storageFile));
+			ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(storageFile)));
 			storageMap = (HashMap<String, Object>) ois.readObject();
 			ois.close();
 		} catch (Exception e) {
