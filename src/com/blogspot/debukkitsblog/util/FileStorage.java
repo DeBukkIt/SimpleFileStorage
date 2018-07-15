@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -15,8 +16,13 @@ import com.blogspot.debukkitsblog.crypt.CryptedObject;
 import com.blogspot.debukkitsblog.crypt.Crypter;
 import com.blogspot.debukkitsblog.crypt.Crypter.DecryptionFailedException;
 
-public class FileStorage {
-
+public class FileStorage implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6410127608267365958L;
+	
 	private File storageFile;
 	private HashMap<String, Object> storageMap;
 
@@ -110,8 +116,9 @@ public class FileStorage {
 	 */
 	public void store(String key, Object o) throws IOException {
 		storageMap.put(key, o);
-		if (autosave)
+		if (autosave) {
 			save();
+		}
 	}
 
 	/**
@@ -203,8 +210,9 @@ public class FileStorage {
 	 */
 	public void remove(String key) throws IOException {
 		storageMap.remove(key);
-		if (autosave)
+		if (autosave) {
 			save();
+		}
 	}
 
 	/**
