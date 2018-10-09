@@ -1,20 +1,12 @@
 package com.blogspot.debukkitsblog.util;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import com.blogspot.debukkitsblog.crypt.CryptedObject;
 import com.blogspot.debukkitsblog.crypt.Crypter;
 import com.blogspot.debukkitsblog.crypt.Crypter.DecryptionFailedException;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class FileStorage implements Serializable {
 	
@@ -71,11 +63,12 @@ public class FileStorage implements Serializable {
 			throw new IllegalArgumentException("FileStorage file must not be a directory");
 		}
 
-		if (storageFile.createNewFile()) {
-			storageMap = new HashMap<String, Object>();
-			save();
-		} else {
+		if (storageFile.length() > 1) {
 			load();
+		} else {
+		    storageFile.createNewFile();
+			storageMap = new HashMap<>();
+			save();
 		}
 	}
 
