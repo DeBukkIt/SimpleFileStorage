@@ -1,3 +1,5 @@
+package com.blogspot.debukkitsblog;
+
 import com.blogspot.debukkitsblog.util.FileStorage;
 import org.junit.Assert;
 import org.junit.Test;
