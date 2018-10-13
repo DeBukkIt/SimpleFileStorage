@@ -30,9 +30,43 @@ public class FileStorage implements Serializable {
 
 	/**
 	 * Creates a FileStorage. It allows you to store your serializable object in a
+	 * file using a key for identification and to read it somewhen later.
+	 * 
+	 * @param autosave
+	 *            Whether every <code>store</code> operation shall automatically
+	 *            write the whole FileStorage to disk. If false, you will need to
+	 *            call the <code>save</code> method manually.
+	 * @param filepath
+	 *            The path of the file your data shall be stored in
+	 * @throws IOException
+	 *             if the file cannot be created
+	 * @throws IllegalArgumentException
+	 *             if the file is a directory
+	 */
+	public FileStorage(String filepath, boolean autosave) throws IllegalArgumentException, IOException {
+		this(new File(filepath), autosave);
+	}
+	
+	/**
+	 * Creates a FileStorage. It allows you to store your serializable object in a
 	 * file using a key for identification and to read it somewhen later.<br>
 	 * All data <code>store</code>d in this FileStorage will instantly be stored in
 	 * the given file. This might cause many write operations on disk.
+	 * 
+	 * @param file
+	 *            The file your data shall be stored in
+	 * @throws IOException
+	 *             if your file cannot be created
+	 * @throws IllegalArgumentException
+	 *             if your file is a directory
+	 */
+	public FileStorage(String filepath) throws IOException, IllegalArgumentException {
+		this(new File(filepath));
+	}
+	
+	/**
+	 * Creates a FileStorage. It allows you to store your serializable object in a
+	 * file using a key for identification and to read it somewhen later.
 	 * 
 	 * @param autosave
 	 *            Whether every <code>store</code> operation shall automatically
@@ -71,7 +105,7 @@ public class FileStorage implements Serializable {
 			throw new IllegalArgumentException("FileStorage file must not be a directory");
 		}
 
-		if (storageFile.createNewFile()) {
+		if (storageFile.length() == 0 || storageFile.createNewFile()) {
 			storageMap = new HashMap<String, Object>();
 			save();
 		} else {
