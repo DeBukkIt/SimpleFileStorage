@@ -2,32 +2,37 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.blogspot.debukkitsblog</groupId>
   <artifactId>SimpleFileStorage</artifactId>
-  <version>1.1.0</version>
+  <version>2.0.0</version>
   <name>SimpleFileStorage</name>
   <description>Very lightweigt Java library for saving and loading any Object to and from the file system with optional AES encryption</description>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-  <build>
-    <sourceDirectory>src</sourceDirectory>
-    <resources>
-      <resource>
-        <directory>src</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-      </resource>
-    </resources>
+    <build>
+    <sourceDirectory>src/main/java</sourceDirectory>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.7.0</version>
+        <version>3.8.1</version>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+          <release>15</release>
         </configuration>
       </plugin>
     </plugins>
   </build>
+  <dependencies>
+  <dependency>
+        <groupId>org.junit.vintage</groupId>
+        <artifactId>junit-vintage-engine</artifactId>
+        <version>5.9.1</version>
+        <scope>test</scope>
+    </dependency>
+        <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>5.9.1</version>
+        <scope>test</scope>
+    </dependency>
+    </dependencies>
   <url>https://github.com/DeBukkIt/SimpleFileStorage</url>
 </project>
