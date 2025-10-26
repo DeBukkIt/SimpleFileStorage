@@ -8,19 +8,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-
-import com.blogspot.debukkitsblog.crypt.CryptedObject;
-import com.blogspot.debukkitsblog.crypt.Crypter;
-import com.blogspot.debukkitsblog.crypt.Crypter.DecryptionFailedException;
 
 public class FileStorage extends HashMap<String, Object> {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1049797586593808789L;
+	private static final long serialVersionUID = -6375762323691191760L;
 
 	private File storageFile;
 
@@ -182,22 +177,6 @@ public class FileStorage extends HashMap<String, Object> {
 	}
 
 	/**
-	 * Stores an Object <i>o</i> using a String <i>key</i> for later
-	 * identification.<br>
-	 * Use <code>store(String key, Object o)</code> for storing your data without
-	 * encryption.
-	 * 
-	 * @param key      The key as String.
-	 * @param o        The Object.
-	 * @param password The password.
-	 * @deprecated Encryption probably very insecure, this method will be removed in a future release
-	 */
-	@Deprecated
-	public void store(String key, Object o, String password) throws IOException {
-		store(key, Crypter.encrypt(o, password));
-	}
-
-	/**
 	 * Reads your object from the storage.<br>
 	 * <br>
 	 * Use <u>get(String key, String password)</u> for AES encrypted objects.
@@ -208,110 +187,12 @@ public class FileStorage extends HashMap<String, Object> {
 	public Object get(String key) {
 		return super.get(key);
 	}
-	
-	/**
-	 * Reads your AES encrypted object from the storage.<br>
-	 * <br>
-	 * Use <u>get(String key)</u> instead for unencrypted objects.
-	 * 
-	 * @param key      The key the object is available under
-	 * @param password The password to use for decryption
-	 * @return your object or null if nothing was found for <i>key</i> or if
-	 *         decryption failed (wrong password)
-	 * @throws DecryptionFailedException This usually happens if the password is
-	 *                                   wrong
-	 * @deprecated Encryption probably very insecure, this method will be removed in a future release
-	 */
-	@Deprecated
-	public Object get(String key, String password) throws DecryptionFailedException {
-		Object result = super.get(key);
-		if (result instanceof CryptedObject) {
-			return Crypter.decrypt((CryptedObject) result, password);
-		} else {
-			return get(key);
-		}
-	}
-
-	/**
-	 * All stored objects in an ArrayList of Objects
-	 * 
-	 * @return all stored objects in an ArrayList of Objects
-	 * @deprecated Use values() instead 
-	 */
-	@Deprecated
-	public ArrayList<Object> getAllAsArrayList() {
-		return new ArrayList<Object>(super.values());
-	}
-
-	/**
-	 * All stored objects in a HashMap of Strings and Objects
-	 * 
-	 * @return all stored objects in a HashMap of Strings and Objects
-	 * @deprecated Typecast this instance to a HashMap instead (if you need one at all)
-	 */
-	@Deprecated
-	public HashMap<String, Object> getAll() {
-		return this;
-	}
 
 	/**
 	 * Prints all stored keys with corresponding objects
 	 */
 	public void printAll() {
 		System.out.println(this);
-	}
-
-	/**
-	 * Removes an Key-Object pair from the storage
-	 * 
-	 * @param key The key of the object
-	 * @deprecated Use remove(Object key) instead
-	 */
-	@Deprecated
-	public void remove(String key) throws IOException {
-		super.remove(key);
-		if (autosave) {
-			try {
-				save();
-			} catch (IOException e) {
-				onException(e);
-			}
-		}
-	}
-
-	/**
-	 * Checks whether a key is registerd
-	 * 
-	 * @param key The Key.
-	 * @return true if an object is available for that key
-	 * @deprecated Use containsKey(Object value) instead
-	 */
-	@Deprecated
-	public boolean hasKey(String key) {
-		return super.containsKey(key);
-	}
-	
-	/**
-	 * Checks whether an object is stored at all
-	 * 
-	 * @param o The Object.
-	 * @return true if the object is stored
-	 * @deprecated Use containsValue(Object value) instead
-	 */
-	@Deprecated
-	public boolean hasObject(Object o) {
-		return super.containsValue(o);
-	}
-
-	/**
-	 * Returns the number of objects (elements) stored
-	 * 
-	 * @return The number of objects (elements) stored
-	 * @deprecated Use size() instead
-	 */
-	@Deprecated
-	public int getSize() {
-		return super.size();
 	}
 
 	/**
@@ -322,11 +203,7 @@ public class FileStorage extends HashMap<String, Object> {
 	public String toString() {
 		String result = "FileStorage @ " + storageFile.getAbsolutePath() + "\n";
 		for (String cKey : super.keySet()) {
-			if (super.get(cKey) instanceof CryptedObject) {
-				result += cKey + " :: (Encrypted)\n";
-			} else {
-				result += cKey + " :: " + super.get(cKey) + "\n";
-			}
+			result += cKey + " :: " + super.get(cKey) + "\n";
 		}
 		return result.trim();
 	}
