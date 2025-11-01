@@ -8,14 +8,17 @@ To avoid heavy load on the hard disk, `autosave` can be disabled in the construc
 ## Usage Example
 ```java
 // Init
-FileStorage fs = new FileStorage("path/to/my_storage_file.dat");
+FileStorage fs = new FileStorage("path/to/my_storage_file.dat", new Class[] { Class1.class, Class2.class });
+
+Class1 testObject1 = ...;
+Class2 testObject2 = ...;
 
 // Put and store data
 fs.put("key1", testObject1);
-fs.put("key2", testString1);
+fs.put("key2", testObject2);
 
 // Restart application
 
 // Get data
-Object loadedObject = fs.get("key1");
+Class1 loadedObject = fs.get("key1");
 ```
