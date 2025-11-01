@@ -6,9 +6,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputFilter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class FileStorage extends HashMap<String, Object> {
 
@@ -18,6 +21,7 @@ public class FileStorage extends HashMap<String, Object> {
 	private static final long serialVersionUID = -6375762323691191760L;
 
 	private File storageFile;
+	private List<Class<?>> allowedClasses;
 
 	private boolean autosave = true;
 
@@ -31,9 +35,10 @@ public class FileStorage extends HashMap<String, Object> {
 	 * @param filepath The path of the file your data shall be stored in
 	 * @throws IOException              if the file cannot be created
 	 * @throws IllegalArgumentException if the file is a directory
+	 * @throws ClassNotFoundException 
 	 */
-	public FileStorage(String filepath, boolean autosave) throws IllegalArgumentException, IOException {
-		this(new File(filepath), autosave);
+	public FileStorage(String filepath, boolean autosave, Class<?>[] allowedClasses) throws IllegalArgumentException, IOException, ClassNotFoundException {
+		this(new File(filepath), autosave, allowedClasses);
 	}
 
 	/**
@@ -45,9 +50,10 @@ public class FileStorage extends HashMap<String, Object> {
 	 * @param file The file your data shall be stored in
 	 * @throws IOException              if your file cannot be created
 	 * @throws IllegalArgumentException if your file is a directory
+	 * @throws ClassNotFoundException 
 	 */
-	public FileStorage(String filepath) throws IOException, IllegalArgumentException {
-		this(new File(filepath));
+	public FileStorage(String filepath, Class<?>[] allowedClasses) throws IOException, IllegalArgumentException, ClassNotFoundException {
+		this(new File(filepath), allowedClasses);
 	}
 
 	/**
@@ -60,9 +66,10 @@ public class FileStorage extends HashMap<String, Object> {
 	 * @param file     The file your data shall be stored in
 	 * @throws IOException              if the file cannot be created
 	 * @throws IllegalArgumentException if the file is a directory
+	 * @throws ClassNotFoundException 
 	 */
-	public FileStorage(File file, boolean autosave) throws IllegalArgumentException, IOException {
-		this(file);
+	public FileStorage(File file, boolean autosave, Class<?>[] allowedClasses) throws IllegalArgumentException, IOException, ClassNotFoundException {
+		this(file, allowedClasses);
 		this.autosave = autosave;
 	}
 
@@ -77,9 +84,15 @@ public class FileStorage extends HashMap<String, Object> {
 	 * @param file The file your data shall be stored in
 	 * @throws IOException              if your file cannot be created
 	 * @throws IllegalArgumentException if your file is a directory
+	 * @throws ClassNotFoundException 
 	 */
-	public FileStorage(File file) throws IOException, IllegalArgumentException {
-		this.storageFile = file;
+	public FileStorage(File file, Class<?>[] allowedClasses) throws IOException, IllegalArgumentException, ClassNotFoundException {
+		// Enforce canonical file paths for security reasons
+		this.storageFile = file.getCanonicalFile();
+		this.allowedClasses = new ArrayList<>();
+		
+		allowNecessaryClasses();
+		addAllowedClasses(allowedClasses);
 
 		if (storageFile.isDirectory()) {
 			throw new IllegalArgumentException("FileStorage file must not be a directory");
@@ -143,37 +156,24 @@ public class FileStorage extends HashMap<String, Object> {
 
 	/**
 	 * Loads the FileStorage from the file
+	 * @throws IOException 
+	 * @throws ClassNotFoundException 
 	 */
-	private void load() {
-		try {
-			ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(storageFile)));
+	protected void load() throws IOException, ClassNotFoundException {
+		if(allowedClasses.isEmpty()) {
+			throw new IllegalStateException("No classes whitelisted, cannot load anything from file for security reasons. Use addAllowedClass(...) to whitelist classes.");
+		}
+		try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(storageFile)))) {
+			ois.setObjectInputFilter(generateObjectInputFilter());
 			FileStorage fileStorageFromFile = (FileStorage) ois.readObject();
 			ois.close();
-			
+
 			// Clear, then populate the inherited HashMap with objects
 			this.clear();
-			for(String remoteKey : fileStorageFromFile.keySet()) {
+			for (String remoteKey : fileStorageFromFile.keySet()) {
 				this.put(remoteKey, fileStorageFromFile.get(remoteKey));
 			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * Stores an Object <i>o</i> using a String <i>key</i> for later
-	 * identification.<br>
-	 * Use <code>store(String key, Object o, String password)</code> for storing
-	 * your data using AES encryption.
-	 * 
-	 * @param key The key as String.
-	 * @param o   The Object.
-	 * @deprecated Use put(String key, Object value) instead
-	 */
-	@Deprecated
-	public void store(String key, Object o) throws IOException {
-		this.put(key, o);
 	}
 
 	/**
@@ -186,6 +186,43 @@ public class FileStorage extends HashMap<String, Object> {
 	 */
 	public Object get(String key) {
 		return super.get(key);
+	}
+	
+	public void addAllowedClasses(Class<?>[] allowedClasses) {
+		for(Class<?> c : allowedClasses) {
+			this.allowedClasses.add(c);
+		}
+	}
+	
+	public void removeAllowedClasses(Class<?>[] allowedClasses) {
+		for(Class<?> c : allowedClasses) {
+			this.allowedClasses.remove(c);
+		}
+	}
+	
+	protected void allowNecessaryClasses() {
+		addAllowedClasses(new Class[] {
+			FileStorage.class,
+			HashMap.class,
+			ArrayList.class,
+			File.class
+		});
+	}
+	
+	protected ObjectInputFilter generateObjectInputFilter() {
+		return (filterInfo) -> {
+			Class<?> serialClass = filterInfo.serialClass();
+			
+			if (serialClass == null) {
+				return ObjectInputFilter.Status.UNDECIDED;
+			}
+
+			if (serialClass.isArray() || serialClass.isPrimitive() || allowedClasses.contains(serialClass)) {
+				return ObjectInputFilter.Status.ALLOWED;
+			}
+			
+			return ObjectInputFilter.Status.REJECTED;
+		};
 	}
 
 	/**
