@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.blogspot.debukkitsblog.util.FileStorage;
@@ -23,8 +24,12 @@ class TestFileStorage {
 	
 	@BeforeAll
 	static void prepareTests() {
-		testFile.delete();
 		testObject1 = UUID.randomUUID();
+	}
+	
+	@BeforeEach
+	void removeFileBeforeEachTest() {
+		testFile.delete();
 	}
 	
 	@Test
@@ -42,15 +47,41 @@ class TestFileStorage {
 		}
 		
 	}
-	
+
 	@Test
-	void testB_Remove() {
+	void testB_Read() {
 		
 		try {
 			FileStorage fs = new FileStorage(testFile, new Class[] { String.class, UUID.class } );
-			fs.remove((Object) "TestKey1");
+			fs.put("TestKey1", testString1);
+			fs.put("TestKey2", testObject1);
 			
-			FileStorage fs2 = new FileStorage(testFile, new Class[] { String.class, UUID.class } );
+			Object o1 = fs.get("TestKey1");
+			Object o2 = fs.get("TestKey2");
+			
+			String stringRead = (String) o1;
+			UUID uuidRead = (UUID) o2;
+			
+			assertEquals(testString1, stringRead);
+			assertEquals(testObject1.toString(), uuidRead.toString());
+			
+			return; // passed
+			
+		} catch (IllegalArgumentException | IOException | ClassNotFoundException e) {
+			fail(e);
+		}		
+		
+	}
+	
+	@Test
+	void testC_Remove() {
+		
+		try {
+			FileStorage fs = new FileStorage(testFile, new Class[] { String.class } );
+			fs.put("TestKey1", testString1);
+			fs.remove("TestKey1");
+			
+			FileStorage fs2 = new FileStorage(testFile, new Class[] { String.class } );
 			assertNull(fs2.get("TestKey1"));
 
 			return; // passed
@@ -62,29 +93,16 @@ class TestFileStorage {
 	}
 
 	@Test
-	void testC_Read() {
-		
-		try {
-			FileStorage fs = new FileStorage(testFile, new Class[] { String.class, UUID.class } );
-			Object o1 = fs.get("TestKey1");
-			Object o2 = fs.get("TestKey2");
-			
-			UUID uuidRead = (UUID) o2;
-			
-			assertNull(o1);
-			assertEquals(testObject1.toString(), uuidRead.toString());
-			
-			return; // passed
-			
-		} catch (IllegalArgumentException | IOException | ClassNotFoundException e) {
-			fail(e);
-		}		
-		
-	}
-
-	@Test
 	void testD_ReadNonWhitelistedObject() {
-		assertThrows(InvalidClassException.class, () ->	new FileStorage(testFile, new Class[] { String.class }));				
+		try {
+			FileStorage fs3 = new FileStorage(testFile, new Class[] { String.class });
+			fs3.put("TestKey2", testObject1);
+			
+			assertThrows(InvalidClassException.class, () -> new FileStorage(testFile, new Class[] { String.class }));
+			
+		} catch (IllegalArgumentException | ClassNotFoundException | IOException e) {
+			fail(e);
+		}				
 	}
 	
 	@AfterAll
